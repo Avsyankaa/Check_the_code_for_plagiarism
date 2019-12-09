@@ -1,0 +1,177 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <chrono>
+
+namespace BFilter {
+	class Filter {
+	private:
+		const unsigned long long M = 2147483647;
+		std::vector<bool> vect;
+		unsigned hash(unsigned, int);
+		unsigned m;
+		unsigned k;
+		std::vector<unsigned> simple_digit;
+	public:
+		Filter(): m(0), k(0) {}
+		std::pair<unsigned, unsigned> create(int, float);
+		bool add(unsigned long long);
+		bool search(unsigned long long);
+		std::string print();
+		~Filter() {}
+	
+	};
+
+	unsigned Filter::hash(unsigned i, int key) {
+		return (((i + 1) * (key % M) + simple_digit[i] % M) % M) % m;
+	}
+
+	std::pair<unsigned, unsigned> Filter::create(int n, float P) {
+		m = std::round(-n * std::log2f(P) / std::log(2));
+		k = std::round(-std::log2f(P));
+		vect.resize(m);
+		simple_digit.push_back(2);
+		unsigned i = 3;
+		while (simple_digit.size() < k){
+				bool simple = true;
+			for (unsigned j = 0; j < simple_digit.size(); ++j)
+				if (i % simple_digit[j] == 0) {
+					simple = false;
+					break;
+				}
+			if (simple)
+				simple_digit.push_back(i);
+			i += 2;
+		}
+		return std::make_pair(m,k);
+	}
+
+	
+	bool Filter::search(int key) {
+		for (unsigned j = 0; j < k; ++j)
+			if (!vect[hash(j, key)])
+				return false;
+		return true;
+	}
+
+	bool Filter::add(int key) {
+		for (unsigned i = 0; i < k; i++)
+			vect[hash(i, key)] = 1;
+		return true;
+	}
+
+
+	std::string Filter::print() {
+		std::string tmp = "";
+		for (unsigned i = 0; i < vect.size(); i = i + 1){
+			if (vect[i]){
+				tmp += "1";
+				continue;
+			}
+			tmp = tmp + "0";
+		}
+		return tmp;
+	}
+}
+
+unsigned search_(const std::string& command) {
+	unsigned found = command.find("add ");
+	if (found == 0)
+		return 1;
+	found = command.find("search ");
+	if (found == 0)
+		return 2;
+	if (command == "print")
+		return 3;
+	return 0;
+}
+
+void error(std::ofstream& out) {
+	out << "error\n";
+}
+
+unsigned space_counter(std::string tmp) {
+	unsigned spaces = 0;
+	for (unsigned i = 0; i < tmp.size(); ++i)
+		if (tmp[i] == ' ')
+			++spaces;
+	return spaces;
+}
+
+int main() {
+	std::ifstream in("file.txt");
+	std::ofstream out("file_o.txt");
+	try {
+		std::string n = "";
+		std::string P = "";
+		std::string command = "";
+		std::string tmp = "";
+		
+
+		while (getline(in, command, '\n')) {
+			int found = command.find("set ");
+			if (found != 0) {
+				error(out);
+				continue;
+			}
+			tmp = command.substr(4, command.size() - 4);
+			unsigned spaces = space_counter(tmp);
+			if (spaces == 1) {
+				int i = 0;
+				while (tmp[i] != ' ') {
+					n += tmp[i];
+					++i;
+				}
+				++i;
+				while (i != tmp.size()) {
+					P += tmp[i];
+					++i;
+				}
+				if (stoi(n) > 0 && stof(P) > 0 && stof(P) <= 0.707)
+					break;
+			}
+			n = "";
+			P = "";
+			error(out);
+		}
+
+		BFilter::Filter f;
+
+		while (getline(in, command, '\n')) {
+			switch (search_(command)) {
+			
+			case 2: {
+				tmp = command.substr(7, command.size() - 7);
+				unsigned spaces = space_counter(tmp);
+				if (spaces == 0 && !tmp.empty()) {
+					if (f.search(std::stoull(tmp.c_str())))
+						out << "1\n";
+					else
+						out << "0\n";
+				}
+				else
+					error(out);
+			} break;
+			case 1: {
+				tmp = command.substr(4, command.size() - 4);
+				unsigned spaces = space_counter(tmp);
+				if (spaces == 0 && !tmp.empty()) {
+					if (!f.add(std::stoull(tmp.c_str())))
+						error(out);
+				}
+				else
+					error(out);
+			} break;
+			case 3: {
+				out << f.print() << "\n";
+			} break;
+			default: {
+				if (!command.empty())
+					error(out);
+			}break;
+			}
+		}
+	}
+}

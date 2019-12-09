@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+
+bool digit(char a){
+    if (a == '0' || a == '1' ||
+        a == '2' || a == '3' ||
+        a == '4' || a == '5' ||
+        a == '6' || a == '7' ||
+        a == '8' || a == '9')
+        return true;
+    return false;
+}
+
+int main(){
+    std::string str;
+    long long sum = 0;
+
+    while(std::cin >> str){
+        for (unsigned i = 0; i < str.length(); ++i){
+            if (!digit(str[i]) && str[i] != '-')
+                str[i] = ' ';
+        }
+        if (digit(str[0]))
+            sum += atoll(str.c_str());
+        for (unsigned i = 0; i < str.length() - 1; ++i){
+            if (str[i] == ' ' && (str[i + 1] == ' ' || str[i + 1] == '-'))
+                continue;
+            if (digit(str[i]) || (str[i] == '-' && !digit(str[i + 1]))){
+                 str[i] = ' ';
+                 continue;
+            }
+            sum += atoll(str.c_str());
+            str[i] = ' ';
+        }
+    }
+
+    std::cout << sum << std::endl;
+}

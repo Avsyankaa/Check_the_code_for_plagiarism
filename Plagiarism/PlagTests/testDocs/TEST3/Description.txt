@@ -1,0 +1,76 @@
+Данный тест проверяет, что глобализатор (токенизатор) справился со своими основными функциями, а именно выполнил следующие
+преобразования для кода:
+1) Заменил все целочисленные типы данных на int
+2) Заменил все типы контейнеров STL на соответствующие им значения (описаны в Globalizator.cpp) 
+3) Заменил все символьные константы на chr, а строковые - на str
+4) Заменил все строковые и символьные типы данных на char
+5) Заменил все остальные (в том числе и описанные пользователем) типы данных на type
+6) Заменил все типы с плавающей точкой на float
+
+1) Убрал namespace
+2) Заменил все функции на func (кроме стандартных, таких как std::getline, однако функции типа vector.size() заменяются)
+3) Заменил все переменные на их тип (даже в случае контейнеров stl)
+4) Убрал комментарии и пробелы
+5) Убрал различия между конструкциями типа *= += ++ -- и т.д. и стандартными, полностью прописанными выражениями
+
+На выходе получается строка без пробелов. НЕ поддерживаются (это не значит, что программа ломается, просто результат может оказаться не 
+совсем точным):
+1) Auto
+2) Iterator
+3) Allocator
+
+А также другие типы данных, о которых я, по всей видимости, забыла, потому что очень редко пользуюсь ими.
+Естественно, не поддерживаются типы данных из сторонних библиотек. Зато того, что поддерживается, в разы больше:
+1) Определенные в классах и структурах кода программы типы данных
+2) std::unordered_set <std::string> intTypes = {
+	"int",
+	"long",
+	"short",
+	"unsigned",
+	"signed",
+	};                             // а также любые многочисленные комбинации в стиле unsigned long int
+	std::unordered_set <std::string> doubleTypes = {
+		"float",
+		"double",
+		"long double",
+	};
+	std::unordered_set <std::string> charTypes = {
+		"char",
+		"string"
+	};
+	std::unordered_set <std::string> anotherTypes = {
+		"bool",
+		"mutex",
+		"conditional_variable",
+		"istringstream",
+		"ostringstream"
+		"ifstream",
+		"ofstream"
+	};
+	std::unordered_set <std::string> stlArrays = {
+		"array",
+		"vector",
+		"deque",
+		"forward_list",
+		"list"
+	};
+	std::unordered_set <std::string> stlMap = {
+		"map",
+		"multimap",
+		"unordered_map",
+		"unordered_multimap"
+	};
+	std::unordered_set <std::string> stlSet = {
+		"set",
+		"multiset",
+		"unordered_set",
+		"unordered_multiset"
+	};
+	std::unordered_set <std::string> stlAdap = {
+		"stack",
+		"queue",
+		"priority_queue"
+	};
+
+Единственный сбой, который я допускаю (но это не страшно, потому что он происходит в каждом документе) - преобразование #include<string> в 
+#include<char>.
