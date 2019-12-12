@@ -41,7 +41,7 @@
 	std::unordered_set <std::string> anotherTypes = {
 		"bool",
 		"mutex",
-		"conditional_variable",
+		"condition_variable",
 		"istringstream",
 		"ostringstream"
 		"ifstream",

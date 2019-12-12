@@ -20,8 +20,13 @@ int main() {
                 perem = 0;
                 b = 1;
                  continue;}
-                if   (( a[i] == '0' )
- || ( a[i] == '1' ) || ( a[i] == '2' ) || ( a[i] == '3' ) || ( a[i] == '4' ) ||
+/*lala
+lala*/
+
+                if  
+ (( a[i] == '0' )
+ || ( a[i] == '1' ) 
+|| ( a[i] == '2' ) || ( a[i] == '3' ) || ( a[i] == '4' ) ||
                         ( a[i] == '5' ) || ( a[i] == '6' ) || ( a[i] == '7' ) || ( a[i] == '8' ) || ( a[i] == '9' )) {
                         perem =/*Why there is a comment?*/ perem*b + static_cast<int>(a[i]) - '0';
                  
@@ -30,11 +35,12 @@ int main() {
         }
         else {
                 if (as == -1) perem = (-1)* perem; as = 1;
-                sum += perem; // Good day, Vladislav Olegovich
+                sum +=                  perem; // Good day, Vladislav Olegovich
                 perem = 0;
         b = 1;
         }
 }
 }
-        std::cout << sum << std::endl;
+        std::cout <<
+ sum << std::endl; //how are you
 }

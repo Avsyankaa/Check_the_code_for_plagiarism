@@ -1,0 +1,69 @@
+class Q {
+    int size;
+    std::string *queue1;
+    int in;
+    int out;
+    int not_free;
+public:
+    Q(int  start_size) {
+        size = start_size;
+        queue1 = new std::string[size];
+        in = -1;
+        out = -1;
+	not_free = 0;
+    }
+
+	void  pushq(std::string x, std::ofstream& write) {
+		std::string a;
+		int i = 0;
+		while (i <= x.length() - 1) {
+			if (x[i] == ' ') {
+				write << "error" << std::endl;
+				return;
+			}
+			a = a + x[i];
+			i++;
+		}
+		if ( not_free == size) {
+			write << "overflow" << std::endl;
+			return;
+		}
+		if (in+1 == size) in = -1;
+		in++;
+		not_free++;
+		queue1[in] = a;
+	}
+
+
+    void popq(std::ofstream& write) {
+	if (not_free == 0) {  
+		write << "underflow" << std::endl;
+		return;
+		}
+	if (out+1 == size) out = -1;
+	out = out + 1;
+	not_free--;
+	write << queue1[out] << std::endl;
+    }
+
+    void printq(std::ofstream& write) {
+	if ( not_free == 0 ) { write << "empty" << std::endl; return; }
+	if (in <= out) {
+	for ( unsigned i = out+1; i < size; i++) 
+		write << queue1[i] << ' ';
+	for ( unsigned j = 0; j < in; j++)
+		write << queue1[j] << ' ';
+	write << queue1[in] << std::endl;	
+	} else {
+	for ( unsigned i = out + 1; i < in; i++)
+		write << queue1[i] << ' ';
+	write << queue1[in] << std::endl;
+		}
+    }
+
+	~Q() {
+		delete[]queue1;
+	}
+
+
+};

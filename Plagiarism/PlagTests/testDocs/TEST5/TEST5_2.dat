@@ -64,15 +64,15 @@ namespace BFilter {
 
 
 	std::string Filter::print() {
-		std::string tmp = "";
+		std::string hoy = "";
 		for (unsigned i = 0; i < vect.size(); i = i + 1){
 			if (vect[i]){
-				tmp += "1";
+				hoy += "1";
 				continue;
 			}
-			tmp = tmp + "0";
+			hoy = hoy + "0";
 		}
-		return tmp;
+		return hoy;
 	}
 }
 

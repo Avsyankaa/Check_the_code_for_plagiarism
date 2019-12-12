@@ -1,9 +1,6 @@
-#include "pch.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "..\Plagiarism\Globarizator.cpp"
-#include "..\Plagiarism\Hasher.cpp"
+#include "..\Plagiarism\sources\Globarizator.cpp"
+#include "..\Plagiarism\\sources\Compare.cpp"
+#include <gtest/gtest.h>
 
 TEST(Glodalizator, Code1) {
 	std::ifstream task("..\\PlagTests\\testDocs\\TEST1\\TEST1.dat");
@@ -63,7 +60,7 @@ TEST(Plagiarism, Code2) {
 	Compare comp(hash1, hash2);
 	PlagResults res = comp.makeResults();
 	bool check = false;
-	if (res.comp1 > 70 && res.comp2 > 70)
+	if (res.comp1 > 95 && res.comp2 > 95)
 		check = true;
 	EXPECT_EQ(check, true);
 } 
@@ -82,7 +79,7 @@ TEST(Plagiarism, Code2_difficult) {
 	Compare comp(hash1, hash2);
 	PlagResults res = comp.makeResults();
 	bool check = false;
-	if (res.comp1 > 70 && res.comp2 > 70)
+	if (res.comp1 > 95 && res.comp2 > 95)
 		check = true;
 	EXPECT_EQ(check, true);
 }
@@ -130,4 +127,54 @@ TEST(Plagiarism, DifCodesOneTask) {
 	Compare comp(hash1, hash2);
 	PlagResults res = comp.makeResults();
 	EXPECT_EQ(res.givePlagResults(), "Plagiarism didn't found\n");
+}
+
+TEST(Glodalizator, Code4) {
+	std::ifstream task("..\\PlagTests\\testDocs\\TEST9\\TEST9.dat");
+	std::string a;
+	std::getline(task, a, '\0');
+	Globalizator glob(a);
+	std::ifstream answ("..\\PlagTests\\testDocs\\TEST9\\TEST9.ans");
+	std::string b;
+	answ >> b;
+	a = glob.giveOutput();
+	EXPECT_EQ(a, b);
+}
+
+TEST(Plagiarism, WhithCycleChanges) {
+	std::ifstream doc1("..\\PlagTests\\testDocs\\TEST10\\TEST10_1.dat");
+	std::string a;
+	std::getline(doc1, a, '\0');
+	std::ifstream doc2("..\\PlagTests\\testDocs\\TEST10\\TEST10_2.dat");
+	std::string b;
+	std::getline(doc2, b, '\0');
+	Globalizator glob1(a);
+	Globalizator glob2(b);
+	Hasher hash1(glob1.giveOutput(), "..\\PlagTests\\testDocs\\TEST10\\TEST10_1.dat");
+	Hasher hash2(glob2.giveOutput(), "..\\PlagTests\\testDocs\\TEST10\\TEST10_2.dat");
+	Compare comp(hash1, hash2);
+	PlagResults res = comp.makeResults();
+	bool check = false;
+	if (res.comp1 > 90 && res.comp2 > 90)
+		check = true;
+	EXPECT_EQ(check, true);
+}
+
+TEST(Plagiarism, WithLittleAndBigDocuments) {
+	std::ifstream doc1("..\\PlagTests\\testDocs\\TEST11\\TEST11_1.dat");
+	std::string a;
+	std::getline(doc1, a, '\0');
+	std::ifstream doc2("..\\PlagTests\\testDocs\\TEST11\\TEST11_2.dat");
+	std::string b;
+	std::getline(doc2, b, '\0');
+	Globalizator glob1(a);
+	Globalizator glob2(b);
+	Hasher hash1(glob1.giveOutput(), "..\\PlagTests\\testDocs\\TEST11\\TEST11_1.dat");
+	Hasher hash2(glob2.giveOutput(), "..\\PlagTests\\testDocs\\TEST11\\TEST11_2.dat");
+	Compare comp(hash1, hash2);
+	PlagResults res = comp.makeResults();
+	bool check = false;
+	if (res.comp1 == 100)
+		check = true;
+	EXPECT_EQ(check, true);
 }

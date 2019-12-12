@@ -1,0 +1,3 @@
+C:\\Projects\\Check_the_code_for_plagiarism\\Plagiarism\\PlagTests\\testDocs\\TEST4\\TEST4_1.dat
+C:\\Projects\\Check_the_code_for_plagiarism\\Plagiarism\\PlagTests\\testDocs\\TEST4\\TEST4_2.dat
+C:\\Projects\\Check_the_code_for_plagiarism\\Plagiarism\\Plagiarism\\Answer.ans
